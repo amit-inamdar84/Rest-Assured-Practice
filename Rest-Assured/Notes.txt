@@ -1,0 +1,235 @@
+Learning sequence:
+Json Path (in this notes), Method chaining, Automate Get, Extract Response, Extract single field, Hamcrest methods and matchers (in this notes), Logging, Passing headers in request
+, Extract and assert reponse headers, Request specification, Response specification, Automate POST, PUT and DELETE, Sending request payload.
+
+Why is API required to communicate between front end and back end?
+Because they speak different languages - Front end is developed in HTML, CSS, Javascript. Back end is developed in Java, Python etc.
+
+
+Fetching JSON data:
+Using Groovy's Gpath:
+In groovy.json packagewe have a class called JsonSlurper that can parse json text into Groovy data structures such as Objects, maps, integers etc.
+JsonSlurper jsonSlurper = new JsonSlurper();
+jsonSlurper.parseText('{"name":"John Doe"}');
+
+string in json is converted to java.lang.string
+object is converted to java.util.LinkedHashMap
+For more details go to groovy-lang.org/json.html
+
+Next we use Gpath expressions for navigation inside json data structure. GPath use a dot-object notation to perform object navigation.
+https://groovy-playground.appspot.com/ - No more available...
+
+jsonSlurper.parseText returns an object. On this object we can use: object.firstname; object.address; object.address.street
+
+Using Jayway's Json Path:
+Need to add as a dependency
+It also uses dot notation.
+Official doc: https://github.com/json-path/JsonPath
+Operators and functions are important here.
+Use jsonpath.com to test syntax
+Some examples : https://goessner.net/articles/JsonPath/index.html#e2
+
+XPath	JSONPath	Description
+/	$	        the root object/element
+.	@	        the current object/element
+/	. or []	    child operator
+..	n/a	        parent operator
+//	..	        recursive descent. JSONPath borrows this syntax from E4X.
+*	*	        wildcard. All objects/elements regardless their names.
+@	n/a	        attribute access. JSON structures don't have attributes.
+[]	[]	        subscript operator. XPath uses it to iterate over element collections and for predicates. In Javascript and JSON it is the native array operator.
+|	[,]	        Union operator in XPath results in a combination of node sets. JSONPath allows alternate names or array indices as a set.
+n/a	[start:end:step]	array slice operator borrowed from ES4.
+[]	?()	       applies a filter (script) expression.
+n/a	()	       script expression, using the underlying script engine.
+()	n/a	       grouping in Xpath
+
+{ "store": {
+    "book": [ 
+      { "category": "reference",
+        "author": "Nigel Rees",
+        "title": "Sayings of the Century",
+        "price": 8.95
+      },
+      { "category": "fiction",
+        "author": "Evelyn Waugh",
+        "title": "Sword of Honour",
+        "price": 12.99
+      },
+      { "category": "fiction",
+        "author": "Herman Melville",
+        "title": "Moby Dick",
+        "isbn": "0-553-21311-3",
+        "price": 8.99
+      },
+      { "category": "fiction",
+        "author": "J. R. R. Tolkien",
+        "title": "The Lord of the Rings",
+        "isbn": "0-395-19395-8",
+        "price": 22.99
+      }
+    ],
+    "bicycle": {
+      "color": "red",
+      "price": 19.95
+    }
+  }
+}
+
+XPath	                JSONPath	                Result
+/store/book/author	 $.store.book[*].author	  the authors of all books in the store
+//author	         $..author	                      all authors
+/store/*	         $.store.*	                      all things in store, which are some books and a red bicycle.
+/store//price	     $.store..price	              the price of everything in the store.
+//book[3]	         $..book[2]	                        the third book
+//book[last()]	     $..book[(@.length-1)]
+                     $..book[-1:]	               the last book in order.
+//book[position()<3]	$..book[0,1]
+                        $..book[:2]	             the first two books
+//book[isbn]	     $..book[?(@.isbn)]	             filter all books with isbn number
+//book[price<10]	 $..book[?(@.price<10)]	     filter all books cheapier than 10
+//*	                      $..*	                 all Elements in XML document. All members of JSON structure.
+
+HTTP methods:
+GET, POST, PUT, PATCH, DELETE etc are HTTP methods and not Rest assured methods.
+ 
+Idempotent means executing the same HTTP method repeatedly will not having effect on the server. i.e., Executing GET many times will not change anything on server. But sending POST request repeatedly (with same data) will either result in error or new resource being created.
+We use HEAD method when the GET’s response is huge and we want to only check the resource size or existence. Mainly for testing purposes. This will actually avoid hitting server unnecessarily. The header we receive in response will be the same headers which we receive in a GET request.
+OPTIONS request is used to get the HTTP methods supported by a resource. In the response go to headers sections and check the header – Access-Control-Allow-Methods. It will list all the methods supported. Also, Access-Control-Allow-Headers will show the content type supported by the resource.
+
+HTTP status codes: 
+  1xx (Informational): The request was received, continuing process
+   2xx (Successful): The request was successfully received,
+      understood, and accepted
+   3xx (Redirection): Further action needs to be taken in order to
+      complete the request
+   4xx (Client Error): The request contains bad syntax or cannot be
+      fulfilled
+   5xx (Server Error): The server failed to fulfill an apparently
+      valid request
+More info: https://datatracker.ietf.org/doc/html/rfc7231#section-6
+
+Mock server:
+Mock server helps to send mock HTTP requests when backend is not ready and we need to test API’s. Instead of backend we can set up a mock server and hit it to test API’s.
+In postman create a mock server (copy the mock server URL after creation) and create a collection. Create a request under collection using mock server URL copied earlier and put /get as end point.
+Now we have created an API which needs to be tested without a backend. So, we define the expected response in the mock server and send test API request. It should get response as we defined earlier. To achieve this, in postman, within the request click on examples. Create a new example and edit the response body and write the response that we need. i.e., expected response. Also set the expected HTTP status code.
+Now go back to request and hit the mock server. The response body and status code should match the expected response we defined in previous step. The API spec helps us to know the below things:
+1.	URL and endpoint of the API that is under test.
+2.	Expected response.
+We can use the above info of API spec to set up the mock server with expected response.
+Note: If for same API end point if you want to test different status codes and response, then define those examples for the same API (Define expected status code and response body). Now add a header in the API request called – x-mock-response-code and add required status code value to it. Now the mock server will respond as per what we defined in the header for the same API request.
+To mock header request and responses, add these custom headers in mock request
+1. header : value1 (This header value will determine which mock example's response is expected)
+2. x-mock-match-request-headers : header (Value of this header should be the header name defined in previous step) 
+Now define two examples where we need to set header : value 1 and header : value2
+Define response body that is to be sent to calling request. Also define custom response header.
+When mock request is sent verify the response body and header. They should match the headers defined in example 1 or 2. 
+
+Rest assured:
+Install eclipse, create new maven project and install rest assured and TestNG dependencies. Also install testing plugin.
+In test case file include static imports:
+import static io.restassured.RestAssured.*;
+import static io.restassured.matcher.RestAssuredMatchers.*;
+import static org.hamcrest.Matchers.*;
+1 right click on your project 2 click on build path 3 click on configure build path 4 click on add library 5 select TestNG 6 click on next 7 click on finish 8 click on apply and close
+This will add TestNG library to your project
+
+Hamcrest: (API Doc: http://hamcrest.org/JavaHamcrest/javadoc/)
+-> Hamcrest is a well known assertion library used for unit testing along with JUnit.
+-> Hamcrest can be used along with Rest Assured for assertions.
+-> Uses matcher classes for making assertions
+
+Adv:
+-> Human readable and in plain english
+-> Code is neat and intuitive
+-> Provides thin methods like "is" and "not", also called as decorators, for more readibility
+
+Hamcrest Vs TestNG
+-> Readibility
+-> Descriptive error messages
+-> Type Safety
+
+Collection matchers (List, Array, Map, etc.)
+==============================================
+hasItem() -> check single element in a collection
+not(hasItem()) -> check single element is NOT in a collection
+hasItems() -> Check all elements are in a collection
+contains() -> Check all elements are in a collection and in a strict order
+containsInAnyOrder() -> Check all elements are in a collection and in any order
+empty() -> Check if collection is empty
+not(emptyArray()) -> Check if the Array is not empty
+hasSize() -> Check size of a collection
+everyItem(startsWith()) -> Check if every item in a collection starts with specified string
+
+hasKey() -> Map -> Check if Map has the specified key [value is not checked]
+hasValue() -> Map -> Check if Map has at least one key matching specified value
+hasEntry() -> Maps -> Check if Map has the specified key value pair
+equalTo(Collections.EMPTY_MAP) -> Maps [Check if empty]
+allOf() -> Matches if all matchers matches (Works only with strings)
+anyOf() -> Matches if any of the matchers matches (Works only with strings)
+
+Numbers:
+greaterThanOrEqualTo()
+lessThan()
+lessThanOrEqualTo()
+
+String:
+containsString()
+emptyString()
+
+Pending:
+DefaultReqAndRespSpec.java
+
+Postman Echo:
+Postman Echo is service you can use to test your REST clients and make sample API calls. It provides endpoints for GET, POST, PUT, various auth mechanisms and other utility endpoints.
+The documentation for the endpoints as well as example responses can be found at https://postman-echo.com
+
+Multipart form data:
+For POST or PUT request we can send form data as request body. Data is sent in parts to server.
+When sending larger amount of data to the server it's common to use the multipart form data technique. 
+Rest Assured provide methods called multiPart that allows you to specify a file, byte-array, input stream or text to upload. 
+In its simplest form you can upload a file like this:
+given().
+        multiPart(new File("/path/to/file")).
+when().
+        post("/upload");
+
+JSON Schema: json-schema.org
+It helps to describe your data format in JSON file.
+Json tool : jsonschema.net/home
+Rest assured doc on Schema validation: https://github.com/rest-assured/rest-assured/wiki/Usage#json-schema-validation
+Need to add Maven dependency: json-schema-validator
+
+Serialization is the process of converting Java object to byte stream. (Ex: Converting Hashmap or Arraylist to json payload in POST.)
+Deserialization is the process of converting byte stream into Java object.(Ex: Converting response to POJO class)
+We convert to byte stream because it is independent of platform/language. Java object is specific to Java language.
+Object Mapping: REST Assured supports mapping Java objects to and from JSON and XML. 
+For JSON you need to have either Jackson, Jackson2, Gson or Johnzon in the classpath and for XML you need JAXB.
+We have to add the above libraries as Maven dependency.
+Rest assured supports content type based serialization. 
+REST Assured will serialize the object to JSON if the request content-type is set to "application/json". 
+It will first try to use Jackson if found in classpath and if not Gson will be used. 
+If you change the content-type to "application/xml" REST Assured will serialize to XML using JAXB. 
+If no content-type is defined REST Assured will try to serialize in the following order:
+JSON using Jackson 2 (Faster Jackson (databind))
+JSON using Jackson (databind)
+JSON using Gson
+JSON using Johnzon
+JSON-B using Eclipse Yasson
+XML using JAXB
+
+Rest assured can also serialize Hashmap and List to JSON.
+If you have multiple object mappers in the classpath at the same time or don't care about setting the content-type you can specify a 
+serializer explicity - Refer: https://github.com/rest-assured/rest-assured/wiki/Usage#using-an-explicit-serializer
+It also supports content type deserialization and custom Content-Type Deserialization.
+Custom Content-Type Deserialization: Refer: https://github.com/rest-assured/rest-assured/wiki/Usage#custom-content-type-deserialization
+
+
+
+
+
+
+
+
+
+
