@@ -1,6 +1,7 @@
 Learning sequence:
 Json Path (in this notes), Method chaining, Automate Get, Extract Response, Extract single field, Hamcrest methods and matchers (in this notes), Logging, Passing headers in request
-, Extract and assert reponse headers, Request specification, Response specification, Automate POST, PUT and DELETE, Sending request payload.
+, Extract and assert reponse headers, Request specification, Response specification, Automate POST, PUT and DELETE, Sending request payload,
+Query and Path parameters
 
 Why is API required to communicate between front end and back end?
 Because they speak different languages - Front end is developed in HTML, CSS, Javascript. Back end is developed in Java, Python etc.
