@@ -6,6 +6,13 @@ and Deserialization, Jackson annotations.
 
 Why is API required to communicate between front end and back end?
 Because they speak different languages - Front end is developed in HTML, CSS, Javascript. Back end is developed in Java, Python etc.
+Different tests and validations in API testing: 
+a. Usually the validations are matching the schema, matching response with the request or with expected values. 
+b. You may do full JSON body validation or partial validation based on the API. 
+c. You could do positive as well as negative scenarios. 
+d. You could simulate user journeys as well for example. one API calling another API and so on. 
+e. It could be token expiry, invalid inputs, etc. Validating supported HTTP codes for e.g. 404, 503, 501, etc. 
+f. Validating response headers.
 
 
 Fetching JSON data:
@@ -19,7 +26,9 @@ object is converted to java.util.LinkedHashMap
 For more details go to groovy-lang.org/json.html
 
 Next we use Gpath expressions for navigation inside json data structure. GPath use a dot-object notation to perform object navigation.
-https://groovy-playground.appspot.com/ - No more available...
+http://groovyconsole.appspot.com/
+https://www.jdoodle.com/execute-groovy-online/
+https://onecompiler.com/groovy
 
 jsonSlurper.parseText returns an object. On this object we can use: object.firstname; object.address; object.address.street
 
@@ -225,6 +234,16 @@ If you have multiple object mappers in the classpath at the same time or don't c
 serializer explicity - Refer: https://github.com/rest-assured/rest-assured/wiki/Usage#using-an-explicit-serializer
 It also supports content type deserialization and custom Content-Type Deserialization.
 Custom Content-Type Deserialization: Refer: https://github.com/rest-assured/rest-assured/wiki/Usage#custom-content-type-deserialization
+
+Advantages of POJO:
+Readability - By looking at POJO class we can understand, what object it represents
+Reusability - We can reuse the class for multiple objects.
+Easy access to data - Since we have Java objects we can easliy access data compared to JSON objects.
+Type safety - If we pass wrong data type to POJO constructor, it gives compile time error.
+Supports Serialization and Deserialization
+
+Disadvantage:
+Lot of POJO classes need to be created for objects. Maintenance is difficult. Solution is to use Lombok which reduces code.
 
 
 
