@@ -329,7 +329,7 @@ public class ComplexPojo3 {
 		    assertThat(responseURL, containsInAnyOrder(requestURL.toArray()));	
 	}
 	
-	@Test
+	//@Test
 	public void create_collection_noFolder_singleRequest_multipleHeaders() throws JsonProcessingException, JSONException {
 		Header header = new Header("Content-Type", "application/json");
 		Header header1 = new Header("Connection", "Close");
@@ -393,7 +393,11 @@ public class ComplexPojo3 {
 		    	}
 		    assertThat(responseURL, containsInAnyOrder(requestURL.toArray()));	
 	}
-
-
-
+	
+	@Test
+	public void test11() {
+		Header header = new Header("Content-Type", "application/json");
+		List<String> headerList = new ArrayList<String>();
+		headerList.add(header.getKey());
+	}
 }

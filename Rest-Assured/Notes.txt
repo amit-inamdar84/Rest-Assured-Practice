@@ -31,6 +31,17 @@ https://www.jdoodle.com/execute-groovy-online/
 https://onecompiler.com/groovy
 
 jsonSlurper.parseText returns an object. On this object we can use: object.firstname; object.address; object.address.street
+Paste below code in Groovy playground to query the json.
+import groovy.json.JsonSlurper
+
+def object = new JsonSlurper().parseText(
+'''
+{INSERT_YOUR_JSON_HERE}
+'''
+)
+
+def query = object
+println query
 
 Using Jayway's Json Path:
 Need to add as a dependency
@@ -244,6 +255,35 @@ Supports Serialization and Deserialization
 
 Disadvantage:
 Lot of POJO classes need to be created for objects. Maintenance is difficult. Solution is to use Lombok which reduces code.
+
+Authentication is confirming the identity and authorization is restriction to perform operations.
+Login username and password are authentication.
+After login what modules user has access to is authorization.
+In API testing we generally use the term authorization instead of authentication. This is because API will provide user the authorization to access a 
+resource after authenticating the user.
+Type of Authentications:
+Basic - Base 64 encoded username:password is sent in header called Authorization. When the HTTP request is sent to server, 
+it decodes the string and provides access. Base64 encoding is not secure as credentials are sent as clear text.
+Digest - Based on challenge - response. Client sends request to server without username and password. Server challenges client by sending some parameters
+like Realm, Nonce etc. Client uses these parameters, encrypts username and pass using MD5 algorithm and sends to server. 
+Bearer - When client sends username and pass, server sends bearer token. This token can be used for subsequent HTTP requests for authorizing API's
+The token can be specified as a value of header called Authorization.
+API Key -   Generated during first time login or signup. It is safe because we can delete and regenerate a new one. Passed as header.
+Form - Contains a form with username and password and submit button.
+OAuth - Used for authorization. Not for authentication (For this we use Open ID connect). OAuth solves the problem of delegated authorization.
+Open ID connect is a layer built on top of OAuth and provides identity services.
+Delegated authorization example: Allow stackoverflow to use Google credentials to login to stack overflow. Here the authorization is delegated
+to Google by Stack overflow.
+If an app/website is allowing user to login using Google/facebook account, it is using open ID connect for authentication
+If an app/website after login, allows user to redirect to Google/Facebook for some services, it is using OAuth for authorization. We can see
+OAuth in URL while redirecting. Ex: Allow a website to use your existing photos in Google pohotos to use for editing, framing etc.
+Authorization grant flow and implicit grant flow are 2 types of Oauth flows. Difference is in implicit grant flow where there is not Auth code
+sent from Authorization server back to client server.
+Client credentials flow - Only services involved here. No users. Best fit for Microservices.
+Image for above flows - My Samsung phone.
+Google OAuth documentation: developers.google.com/identity/protocols/oauth2
+
+
 
 
 
