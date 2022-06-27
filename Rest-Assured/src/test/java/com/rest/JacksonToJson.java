@@ -14,6 +14,7 @@ import org.testng.annotations.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
@@ -62,6 +63,30 @@ public class JacksonToJson {
 		                body("workspace.name", equalTo("Pay1"),
 		        		"workspace.id" , matchesPattern("^[a-z0-9-]{36}$"));
 			
+	}
+	
+	@Test
+	public void create_workspace_using_object_node() throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		ObjectNode nestedobjectNode = objectMapper.createObjectNode();
+		nestedobjectNode.put("name", "JacksonNodeSpace");
+		nestedobjectNode.put("type", "personal");
+		nestedobjectNode.put("description", "JacksonNodeSpace");
+		
+		ObjectNode mainObjectNode = objectMapper.createObjectNode();
+		mainObjectNode.set("workspace", nestedobjectNode);
+		
+		String mainString = objectMapper.writeValueAsString(mainObjectNode);
+		//Instead of string we can directly pass the object node. i.e.mainObjectNode
+		given().
+                body(mainString).
+        when().
+                post("/workspaces").
+        then().
+                log().all().
+                assertThat().
+                body("workspace.name", equalTo("JacksonNodeSpace"),
+        		"workspace.id" , matchesPattern("^[a-z0-9-]{36}$"));
 	}
 
 }

@@ -10,11 +10,12 @@ import org.testng.annotations.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
-import io.restassured.config.EncoderConfig;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
 //Here we have used UTF-8 format in request. It is the encoding format supported by HTML pages.
@@ -92,6 +93,32 @@ public class JSONPayloadArrayList {
 		                assertThat().
 		                body("msg", equalTo("Success"));
 			
+	}
+	
+	@Test
+	public void create_workspace_using_object_node_arraylist() throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		ObjectNode object5001 = objectMapper.createObjectNode();
+		object5001.put("id", "5001");
+		object5001.put("type", "None");
+		
+		ObjectNode object5002 = objectMapper.createObjectNode();
+		object5002.put("id", "5002");
+		object5002.put("type", "Glazed");
+		
+		ArrayNode mainNode = objectMapper.createArrayNode();
+		mainNode.add(object5001);
+		mainNode.add(object5002);
+		
+		String mainStr = objectMapper.writeValueAsString(mainNode);
+        //Alternatively we can pass the mainNode to body method in given() clause.
+		given().
+                body(mainStr).
+        when().
+                post("/post").
+        then().spec(customResponseSpecification).
+                assertThat().
+                body("msg", equalTo("Success"));
 	}
 
 }
