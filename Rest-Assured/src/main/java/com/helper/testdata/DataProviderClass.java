@@ -11,7 +11,7 @@ public class DataProviderClass {
 	
 	@DataProvider(name = "GetKey")
 	public Object[] getAPIKey() throws IOException{
-		File file = new File("D:/Git/Rest-Assured/src/main/java/com/helper/configFile/config.properties");
+		File file = new File("D:/Rest Assured/Rest-Assured-Practice/Rest-Assured/src/main/java/configFile/config.properties");
 		FileInputStream fis = new FileInputStream(file);
 		Properties OR = new Properties();
 		OR.load(fis);
