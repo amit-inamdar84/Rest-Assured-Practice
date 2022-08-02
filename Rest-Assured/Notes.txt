@@ -116,8 +116,8 @@ HTTP methods:
 GET, POST, PUT, PATCH, DELETE etc are HTTP methods and not Rest assured methods.
  
 Idempotent means executing the same HTTP method repeatedly will not having effect on the server. i.e., Executing GET many times will not change anything on server. But sending POST request repeatedly (with same data) will either result in error or new resource being created.
-We use HEAD method when the GET’s response is huge and we want to only check the resource size or existence. Mainly for testing purposes. This will actually avoid hitting server unnecessarily. The header we receive in response will be the same headers which we receive in a GET request.
-OPTIONS request is used to get the HTTP methods supported by a resource. In the response go to headers sections and check the header – Access-Control-Allow-Methods. It will list all the methods supported. Also, Access-Control-Allow-Headers will show the content type supported by the resource.
+We use HEAD method when the GETï¿½s response is huge and we want to only check the resource size or existence. Mainly for testing purposes. This will actually avoid hitting server unnecessarily. The header we receive in response will be the same headers which we receive in a GET request.
+OPTIONS request is used to get the HTTP methods supported by a resource. In the response go to headers sections and check the header ï¿½ Access-Control-Allow-Methods. It will list all the methods supported. Also, Access-Control-Allow-Headers will show the content type supported by the resource.
 
 HTTP status codes: 
   1xx (Informational): The request was received, continuing process
@@ -132,14 +132,14 @@ HTTP status codes:
 More info: https://datatracker.ietf.org/doc/html/rfc7231#section-6
 
 Mock server:
-Mock server helps to send mock HTTP requests when backend is not ready and we need to test API’s. Instead of backend we can set up a mock server and hit it to test API’s.
+Mock server helps to send mock HTTP requests when backend is not ready and we need to test APIï¿½s. Instead of backend we can set up a mock server and hit it to test APIï¿½s.
 In postman create a mock server (copy the mock server URL after creation) and create a collection. Create a request under collection using mock server URL copied earlier and put /get as end point.
 Now we have created an API which needs to be tested without a backend. So, we define the expected response in the mock server and send test API request. It should get response as we defined earlier. To achieve this, in postman, within the request click on examples. Create a new example and edit the response body and write the response that we need. i.e., expected response. Also set the expected HTTP status code.
 Now go back to request and hit the mock server. The response body and status code should match the expected response we defined in previous step. The API spec helps us to know the below things:
 1.	URL and endpoint of the API that is under test.
 2.	Expected response.
 We can use the above info of API spec to set up the mock server with expected response.
-Note: If for same API end point if you want to test different status codes and response, then define those examples for the same API (Define expected status code and response body). Now add a header in the API request called – x-mock-response-code and add required status code value to it. Now the mock server will respond as per what we defined in the header for the same API request.
+Note: If for same API end point if you want to test different status codes and response, then define those examples for the same API (Define expected status code and response body). Now add a header in the API request called ï¿½ x-mock-response-code and add required status code value to it. Now the mock server will respond as per what we defined in the header for the same API request.
 To mock header request and responses, add these custom headers in mock request
 1. header : value1 (This header value will determine which mock example's response is expected)
 2. x-mock-match-request-headers : header (Value of this header should be the header name defined in previous step) 
@@ -262,26 +262,113 @@ After login what modules user has access to is authorization.
 In API testing we generally use the term authorization instead of authentication. This is because API will provide user the authorization to access a 
 resource after authenticating the user.
 Type of Authentications:
-Basic - Base 64 encoded username:password is sent in header called Authorization. When the HTTP request is sent to server, 
+-Basic - Base 64 encoded username:password is sent in header called Authorization. When the HTTP request is sent to server, 
 it decodes the string and provides access. Base64 encoding is not secure as credentials are sent as clear text.
-Digest - Based on challenge - response. Client sends request to server without username and password. Server challenges client by sending some parameters
+-Digest - Based on challenge - response. Client sends request to server without username and password. Server challenges client by sending some parameters
 like Realm, Nonce etc. Client uses these parameters, encrypts username and pass using MD5 algorithm and sends to server. 
-Bearer - When client sends username and pass, server sends bearer token. This token can be used for subsequent HTTP requests for authorizing API's
+-Bearer - When client sends username and pass, server sends bearer token. This token can be used for subsequent HTTP requests for authorizing API's
 The token can be specified as a value of header called Authorization.
-API Key -   Generated during first time login or signup. It is safe because we can delete and regenerate a new one. Passed as header.
-Form - Contains a form with username and password and submit button.
-OAuth - Used for authorization. Not for authentication (For this we use Open ID connect). OAuth solves the problem of delegated authorization.
+-API Key -   Generated during first time login or signup. It is safe because we can delete and regenerate a new one. Passed as header.
+-Form - Contains a form with username and password and submit button.
+-OAuth - Used for authorization. Not for authentication (For this we use Open ID connect). OAuth solves the problem of delegated authorization.
 Open ID connect is a layer built on top of OAuth and provides identity services.
+OAuth terminologies: Resource owner, resource, client, resource server, Authorization server.
 Delegated authorization example: Allow stackoverflow to use Google credentials to login to stack overflow. Here the authorization is delegated
 to Google by Stack overflow.
 If an app/website is allowing user to login using Google/facebook account, it is using open ID connect for authentication
 If an app/website after login, allows user to redirect to Google/Facebook for some services, it is using OAuth for authorization. We can see
 OAuth in URL while redirecting. Ex: Allow a website to use your existing photos in Google pohotos to use for editing, framing etc.
 Authorization grant flow and implicit grant flow are 2 types of Oauth flows. Difference is in implicit grant flow where there is not Auth code
-sent from Authorization server back to client server.
+sent from Authorization server back to client server. Only access token is sent. No refresh token also
+In Authorization grant flow, authorization server issues auth code, access token and refresh token to client app.
 Client credentials flow - Only services involved here. No users. Best fit for Microservices.
 Image for above flows - My Samsung phone.
+
+---Gmail API Example----Authorization grant flow
+1. Enter credentials and scope and authorize. - Response- Auth code
+2. Supply auth code and get access token and refresh token.
+3. Renew token using refresh token.
+4. Get user profile by supplying access token
+5. Send email by encoding the content
+
 Google OAuth documentation: developers.google.com/identity/protocols/oauth2
+In above page go to https://console.developers.google.com/ link for Google API Console and create a new project.
+Go to library menu and enable Gmail API after searching.
+Go back to Dashboard and create consent screen. Select external radio button and fill the app info form.
+Now select the scopes for Gmail API to read email address profile and compose email.
+Too many steps. Watch video for further steps to set up client credentials.
+Client app dummy URL: https://localhost:8080
+Client ID and client secret store in local as it is sensitive info.
+Watch video 154 onwards for details to set up client application in Google(https://developers.google.com/identity/protocols/oauth2/web-server)
+and build endpoint from Google and postman(build api and query parameters - video 157), send request from
+client app to Gmail to compose email, access personal info etc.
+After logging in using Gmail credentials, the URL will contain and Auth code which is short lived. Use this auth code to get access token
+Again refer to Google OAuth page(Step 5 in https://developers.google.com/identity/protocols/oauth2/web-server) to get post request in which we
+will send auth code.
+In response we get access token and refresh token. Even if access token  expires, refresh token can be used to get new access token. No need to login
+flow again. But user session must active.
+Need to send a POST request again with one of the query parameters being refresh_token
+Gmail API page: https://developers.google.com/gmail/api/reference/rest
+Base64 encoding::
+https://ostermiller.org/calc/encode.html
+
+------------Gmail Example------Implicit grant flow--------
+https://developers.google.com/identity/protocols/oauth2/javascript-implicit-flow
+Step 2 in above URL
+------------------------------------
+Open ID connect flow:
+Client authenticates using ID token which is issued by Auth server (Google)
+API for authentication using Open ID connect: https://accounts.google.com/o/oauth2/v2/auth
+The scope parameter for above API uses openid email which is the differentiation that this request is for authentication
+https://auth0.com/docs/secure/tokens/json-web-tokens
+JSON web token (JWT), pronounced "jot", is an open standard (RFC 7519) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object.
+Structure:
+Header: Includes the type of the token and the signing algorithm
+Payload: Includes claims. Claims are the statements about an identity that can be used by the server for validation purposes
+Signature: Used to verify the token is not compromised/is not changed. Additionally, if the token is signed with a private key, the server can verify the sender of the token.
+-JWTs can be used in various ways:
+Authentication: When a user successfully logs in using their credentials, an ID token is returned. According to the OpenID Connect (OIDC) specs, an ID token is always a JWT.
+Authorization: Once a user is successfully logged in, an application may request to access routes, services, or resources (e.g., APIs) on behalf of that user. To do so, in every request, it must pass an Access Token, which may be in the form of a JWT. Single Sign-on (SSO) widely uses JWT because of the small overhead of the format, and its ability to easily be used across different domains.
+Information Exchange: JWTs are a good way of securely transmitting information between parties because they can be signed, which means you can be sure that the senders are who they say they are. Additionally, the structure of a JWT allows you to verify that the content hasn't been tampered with.
+
+Rest assured automation of above flows:
+Cannot automate authorization to get auth code. Because we need to use browser to enter credentials.
+Will start with automating get user profile and then sending email.
+----------------------------------------------------------------------------------------
+Session based authentication:
+Session maintained by server.
+Session based authentication can work only for a single domain while the token based authentication can work across multiple domains
+Refer image in screenshots folder
+Diff between session based auth and token based auth: Refer video 166
+---------------------------------------------------------------------------------------
+Form based auth:FormAuthentication.java
+-----------------------------------------------------------
+CSRF token: FormAuthentication.java
+------------------------------------------------------------
+Demo app setup:
+mvnw.cmd clean install
+Path: D:\Demo App\RomanianCoderExamples-master\SpringBootSecurity\Forms\target
+Command: java -jar springboot-security-forms-0.0.1-SNAPSHOT.jar
+After setup, we will use Rest assured to automate login and fetch session id and use the same for subsequent requests.
+ 
+---------------------------------------------------------------
+Cookies:
+SendCookies.java
+Video - 175
+Refer screenshot
+---------------------------------------------------------
+Automate spotify API's using framework:https://developer.spotify.com/documentation/web-api/
+Create a client app, note client ID and secret
+Base URI: https://accounts.spotify.com
+Add redirect URI in client app settings
+Prepare API request in post man using: https://developer.spotify.com/documentation/general/guides/authorization/code-flow/
+Paste in postman and edit query parameters where required.
+Run the API in browser to get code.
+This code is short lived. Need to run the autorize API again to get new auth code.
+Now we can use this code to get access and refresh token
+If access token expires, we can use refresh token to regenerate access token.
+Base URI of web API: https://api.spotify.com
+
 
 
 
