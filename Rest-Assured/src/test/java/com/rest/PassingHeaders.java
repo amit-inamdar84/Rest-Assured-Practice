@@ -1,5 +1,6 @@
 package com.rest;
 //This class demonstrates various ways in which headers can be passed with a request.
+//All headers list: https://www.iana.org/assignments/message-headers/message-headers.xhtml
 import static io.restassured.RestAssured.given;
 
 import java.util.HashMap;

@@ -14,10 +14,30 @@ d. You could simulate user journeys as well for example. one API calling another
 e. It could be token expiry, invalid inputs, etc. Validating supported HTTP codes for e.g. 404, 503, 501, etc. 
 f. Validating response headers.
 
+Advantages of JSON:
+Lightweight
+Human readable
+Easy to understand
+Can be used with any language
 
-Fetching JSON data:
+Rest vs HTTP:
+Rest is architecture and HTTP is protocol
+Rest uses HTTP methods like GET, PUT etc.
+
+JSON data types:
+String
+Boolean
+Numeric
+Object
+Array
+NULL
+
+Fetching JSON data: (Parsing json file)
+Groovy's Gpath
+Jayway JSON path
+
 Using Groovy's Gpath:
-In groovy.json packagewe have a class called JsonSlurper that can parse json text into Groovy data structures such as Objects, maps, integers etc.
+In groovy.json package we have a class called JsonSlurper that can parse json text into Groovy data structures such as Objects, maps, integers etc.
 JsonSlurper jsonSlurper = new JsonSlurper();
 jsonSlurper.parseText('{"name":"John Doe"}');
 
@@ -36,15 +56,22 @@ import groovy.json.JsonSlurper
 
 def object = new JsonSlurper().parseText(
 '''
-{INSERT_YOUR_JSON_HERE}
+{
+ address:{
+  street: ABC
+ }
+}
 '''
 )
 
 def query = object
 println query
 
+object.address
+--------------------------------------------------------------------------------------------
 Using Jayway's Json Path:
-Need to add as a dependency
+Functions like min(), max() not working. Need to check this and practice json path writing later.
+Need to add as a dependency - json-path
 It also uses dot notation.
 Official doc: https://github.com/json-path/JsonPath
 Operators and functions are important here.
@@ -111,9 +138,15 @@ XPath	                JSONPath	                Result
 //book[isbn]	     $..book[?(@.isbn)]	             filter all books with isbn number
 //book[price<10]	 $..book[?(@.price<10)]	     filter all books cheapier than 10
 //*	                      $..*	                 all Elements in XML document. All members of JSON structure.
+---Need to practice more----
+Groovy vs Jayway Jpath:
+Groovy is transitive dependency. JPath needs to be expliclity added as dependency
+Syntax is different.
 
 HTTP methods:
+Refer HTTP Methods.png and StatusCodes.png
 GET, POST, PUT, PATCH, DELETE etc are HTTP methods and not Rest assured methods.
+Most of them are defined under RFC 7231 specifications. Only PATCH is defined under RFC 5789.
  
 Idempotent means executing the same HTTP method repeatedly will not having effect on the server. i.e., Executing GET many times will not change anything on server. But sending POST request repeatedly (with same data) will either result in error or new resource being created.
 We use HEAD method when the GET�s response is huge and we want to only check the resource size or existence. Mainly for testing purposes. This will actually avoid hitting server unnecessarily. The header we receive in response will be the same headers which we receive in a GET request.
@@ -127,8 +160,19 @@ HTTP status codes:
       complete the request
    4xx (Client Error): The request contains bad syntax or cannot be
       fulfilled
+      400: Bad request - Bad syntax - When password is not provided.
+      401: Unauthorized - Authentication error
+      
+      404: Requested resource not found
    5xx (Server Error): The server failed to fulfill an apparently
       valid request
+      500: Internal server error
+      502: Bad Gateway status code indicates that the server, while
+   acting as a gateway or proxy, received an invalid response from an
+   inbound server it accessed while attempting to fulfill the request.
+      503: (Service Unavailable) status code indicates that the server
+   is currently unable to handle the request due to a temporary overload
+   or scheduled maintenance
 More info: https://datatracker.ietf.org/doc/html/rfc7231#section-6
 
 Mock server:
@@ -148,7 +192,10 @@ Define response body that is to be sent to calling request. Also define custom r
 When mock request is sent verify the response body and header. They should match the headers defined in example 1 or 2. 
 
 Rest assured:
-Install eclipse, create new maven project and install rest assured and TestNG dependencies. Also install testing plugin.
+It is a java library that can be used to automate Rest API's
+Install eclipse, create new maven project and install rest assured and TestNG dependencies. Also install TestNG plugin.
+We can use static imports for readability. i.e. to avoid RestAssured.given() and only use given() for BDD like syntax. Also avoids code duplication.
+(Refer MethodChaining.java)
 In test case file include static imports:
 import static io.restassured.RestAssured.*;
 import static io.restassured.matcher.RestAssuredMatchers.*;
@@ -171,7 +218,7 @@ Hamcrest Vs TestNG
 -> Descriptive error messages
 -> Type Safety
 
-Collection matchers (List, Array, Map, etc.)
+Collection matchers (List, Array, Map, etc.) - Need to practice
 ==============================================
 hasItem() -> check single element in a collection
 not(hasItem()) -> check single element is NOT in a collection
@@ -246,6 +293,11 @@ serializer explicity - Refer: https://github.com/rest-assured/rest-assured/wiki/
 It also supports content type deserialization and custom Content-Type Deserialization.
 Custom Content-Type Deserialization: Refer: https://github.com/rest-assured/rest-assured/wiki/Usage#custom-content-type-deserialization
 
+Rest assured can perform Serialization and Deserialization under the hood. If we need to do it outside rest assured (only in some cases might be required), 
+need to use jackson-databind maven dependency.
+
+POJO is used to represent the request and response as Java objects. Doing this with JSON/XML will be challenging.
+It is like a blueprint which can reused for all instances of data. Ex: Employee can be object and role, salary etc can be passed and retrieved.
 Advantages of POJO:
 Readability - By looking at POJO class we can understand, what object it represents
 Reusability - We can reuse the class for multiple objects.

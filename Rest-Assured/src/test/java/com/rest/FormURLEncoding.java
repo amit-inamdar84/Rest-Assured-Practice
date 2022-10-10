@@ -5,7 +5,7 @@ import static io.restassured.RestAssured.given;
 import org.testng.annotations.Test;
 import io.restassured.RestAssured;
 import io.restassured.config.EncoderConfig;
-
+//Form data, form url encoding and raw are types of request body that are sent in post request.
 public class FormURLEncoding {
 
 	@Test

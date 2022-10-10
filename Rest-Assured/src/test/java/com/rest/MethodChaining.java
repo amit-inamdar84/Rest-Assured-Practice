@@ -19,7 +19,7 @@ if (response.getStatusCode() == 200) {
 	getTodos = gson.fromJson(response.getBody().asString(), GetTodos[].class);
 	Assert.assertEquals("Actual result", "Expected result");
 }*/
-//given().when().then(); This is called method chaining. We can chain methods when all methods return an object of same type.
+//given().when().then(); This is called method chaining. We can chain methods when all methods return an object of same class that implements RequestSpecification interface.
 
 public class MethodChaining {
 	@Test

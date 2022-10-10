@@ -3,7 +3,7 @@ package com.request.pojo.workspace;
 import java.util.HashMap;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-//Included jackson annotation in this file asn it is difficult to create another test for small concepts.
+//Included jackson annotation in this file as it is difficult to create another test for small concepts.
 //@JsonInclude will work during serialization.
 //@JsonIgnore will work during serialization and deserialization. It can be used with variable or getter, setter method.
 //@JsonIgnoreProperties - Have option to select either serialization or deserialization. Class level Format is as below: 

@@ -51,7 +51,7 @@ public class JacksonToJson {
 				mainObject.put("workspace", nestedObject);
 				
 				ObjectMapper objectMapper = new ObjectMapper();
-				String mainString = objectMapper.writeValueAsString(mainObject);
+				String mainString = objectMapper.writeValueAsString(mainObject);//Here the java object is converted to json and represented in string.
 				
 				given().
 		                body(mainString).

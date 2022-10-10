@@ -34,27 +34,24 @@ public class ExtractSingleFieldFromResponse {
 		        response();
 //There are multiple ways to extract single field value from response. They are listed below.
 		//Option1: On reference of Response interface call method path() which accepts json path as argument and returns value.
-		System.out.println("Response: "+response.path("workspaces[0].name"));
+		System.out.println("Workspace name: "+response.path("workspaces[0].name"));
 		//Option2: Create an object of JsonPath class constructor JsonPath(String). On the object reference call method .getString
 		//and pass Json Path as argument.
 		JsonPath jsonPath = new JsonPath(response.getBody().asString());//Constructor argument is response body as string.
-		System.out.println("Response: "+jsonPath.getString("workspaces[0].name"));
+		System.out.println("Workspace name: "+jsonPath.getString("workspaces[0].name"));//Instead of getString we can use getList etc for other data types
 		//Option3: Call static method .from of JsonPath class that accepts response as string and returns JsonPath object. On that call
 		//.getString() method same like in option2 above.
-		System.out.println("Response: "+JsonPath.from(response.asString()).getString("workspaces[0].name"));
+		System.out.println("Workspace name: "+JsonPath.from(response.asString()).getString("workspaces[0].name"));
 		System.out.println("------------------------------------------------------------------------------------------");
 		
 		//Hamcrest assertions - Visible only after importing import static org.hamcrest.MatcherAssert.assertThat;
 		//Or should add maven dependency
-		assertThat(jsonPath.getString("workspaces[0].name"), equalTo("Test20"));
+		//Example below is to show how hamcrest can be used outside of rest assured methods.
+		assertThat(jsonPath.getString("workspaces[0].name"), equalTo("Team Workspace"));
 		
 		//TestNG assertion
-		Assert.assertEquals(jsonPath.getString("workspaces[0].name"), "Test20");
+		Assert.assertEquals(jsonPath.getString("workspaces[0].name"), "Team Workspace");
 		
 	}
-
-
-
-
 
 }
