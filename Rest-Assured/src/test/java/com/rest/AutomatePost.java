@@ -60,7 +60,7 @@ public class AutomatePost {
 		        log().all().
 		        assertThat().
 		        body("workspace.name", equalTo("Payload workspace"),
-		        		"workspace.id" , matchesPattern("^[a-z0-9-]{36}$"));
+		        		"workspace.id" , matchesPattern("^[a-z0-9-]{36}$"));//https://regex101.com/
 		        
 	
 	}
