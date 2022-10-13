@@ -36,7 +36,7 @@ public class RequestSpec {
 		//Alternatively instead of RequestSpecification, we can use RequestSpecBuilder class for building the request. Refer video no 79.
 	    requestSpecification = given().//Instead of given(), we can use with()
 				baseUri("https://api.postman.com").
-		        header("X-Api-Key", "PMAK-6163dd9a886923005f2aad79-cdd431c2dbd9109d3e5c010d48a558567c");
+		        header("X-Api-Key", "APIKey");
 	}
 
 	@Test

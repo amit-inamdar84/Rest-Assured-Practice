@@ -12,8 +12,8 @@ public class AutomateGet {
 	@Test(dataProvider = "GetKey" , dataProviderClass = DataProviderClass.class)
 	public void validate_get_status_code(String apiKey){
 		given().//All information(Request spec) like uri, header, parameters are sent in given() which is a static method in RestAssured class
-		        baseUri("https://api.postman.com").
-		        header("X-Api-Key", apiKey).
+		        baseUri("https://api.postman.com").//Unimplemented method from RequestSpecification interface
+		        header("X-Api-Key", apiKey).//Unimplemented method from RequestSpecification interface
 		when().//Action or event. Includes GET, POST or any such request and endpoint
 		        get("/workspaces/").
 		then().//Outcome validation for cookies, headers and response
