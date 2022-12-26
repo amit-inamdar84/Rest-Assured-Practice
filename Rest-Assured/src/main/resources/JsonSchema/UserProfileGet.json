@@ -1,0 +1,135 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        "display_name",
+        "external_urls",
+        "followers",
+        "href",
+        "id",
+        "images",
+        "type",
+        "uri"
+    ],
+    "properties": {
+        "display_name": {
+            "type": "string",
+            "default": "",
+            "title": "The display_name Schema",
+            "examples": [
+                "Amit"
+            ]
+        },
+        "external_urls": {
+            "type": "object",
+            "default": {},
+            "title": "The external_urls Schema",
+            "required": [
+                "spotify"
+            ],
+            "properties": {
+                "spotify": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The spotify Schema",
+                    "examples": [
+                        "https://open.spotify.com/user/31pb3fllty6s6e36u4ikhfienoyi"
+                    ]
+                }
+            },
+            "examples": [{
+                "spotify": "https://open.spotify.com/user/31pb3fllty6s6e36u4ikhfienoyi"
+            }]
+        },
+        "followers": {
+            "type": "object",
+            "default": {},
+            "title": "The followers Schema",
+            "required": [
+                "href",
+                "total"
+            ],
+            "properties": {
+                "href": {
+                    "type": "null",
+                    "default": null,
+                    "title": "The href Schema",
+                    "examples": [
+                        null
+                    ]
+                },
+                "total": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "The total Schema",
+                    "examples": [
+                        0
+                    ]
+                }
+            },
+            "examples": [{
+                "href": null,
+                "total": 0
+            }]
+        },
+        "href": {
+            "type": "string",
+            "default": "",
+            "title": "The href Schema",
+            "examples": [
+                "https://api.spotify.com/v1/users/31pb3fllty6s6e36u4ikhfienoyi"
+            ]
+        },
+        "id": {
+            "type": "string",
+            "default": "",
+            "title": "The id Schema",
+            "examples": [
+                "31pb3fllty6s6e36u4ikhfienoyi"
+            ]
+        },
+        "images": {
+            "type": "array",
+            "default": [],
+            "title": "The images Schema",
+            "items": {},
+            "examples": [
+                []
+            ]
+        },
+        "type": {
+            "type": "string",
+            "default": "",
+            "title": "The type Schema",
+            "examples": [
+                "user"
+            ]
+        },
+        "uri": {
+            "type": "string",
+            "default": "",
+            "title": "The uri Schema",
+            "examples": [
+                "spotify:user:31pb3fllty6s6e36u4ikhfienoyi"
+            ]
+        }
+    },
+    "examples": [{
+        "display_name": "Amit",
+        "external_urls": {
+            "spotify": "https://open.spotify.com/user/31pb3fllty6s6e36u4ikhfienoyi"
+        },
+        "followers": {
+            "href": null,
+            "total": 0
+        },
+        "href": "https://api.spotify.com/v1/users/31pb3fllty6s6e36u4ikhfienoyi",
+        "id": "31pb3fllty6s6e36u4ikhfienoyi",
+        "images": [],
+        "type": "user",
+        "uri": "spotify:user:31pb3fllty6s6e36u4ikhfienoyi"
+    }]
+}

@@ -17,7 +17,7 @@ public class ExtractResponse {
 		        //queryParam("anotherparam", "multiplevalues").
 		        //queryParams(parametersMap). Can add all parameters to map and pass as argument.
 		        //queryParam("key", "value","value2","value3"). Multi value query parameter.
-		        pathParam("userid", "2").
+		        pathParam("userid", "f971e759-4aaf-48ed-8f5c-5be09ea6d2ef").
 		        header("X-Api-Key", apiKey).
 		when().
 		        get("/workspaces/{userid}").//Inserted {userid} to include path parameter.

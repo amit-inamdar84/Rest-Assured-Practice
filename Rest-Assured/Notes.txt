@@ -2,7 +2,8 @@ Learning sequence:
 Json Path (in this notes), Method chaining, Automate Get, Extract Response, Extract single field, Hamcrest methods and matchers (in this notes), Logging, Passing headers in request
 , Extract and assert reponse headers, Request specification, Response specification, Automate POST, PUT and DELETE, Sending request payload,
 Query and Path parameters, Multipart Form data, File upload and download, Form URL Encoding, JSON Schema validation, Filters, Serialization
-and Deserialization, Jackson annotations.
+and Deserialization, Jackson annotations, Authentication schemes, Gmail API, Form based auth, Handling cookies, Framework, Spotify API, Lombok,
+Allure reports, Maven, Parallel execution, Github integration, Jenkins
 
 Why is API required to communicate between front end and back end?
 Because they speak different languages - Front end is developed in HTML, CSS, Javascript. Back end is developed in Java, Python etc.
@@ -51,14 +52,13 @@ https://www.jdoodle.com/execute-groovy-online/
 https://onecompiler.com/groovy
 
 jsonSlurper.parseText returns an object. On this object we can use: object.firstname; object.address; object.address.street
-Paste below code in Groovy playground to query the json.
-import groovy.json.JsonSlurper
-
+Paste below code in Groovy playground (https://groovyconsole.appspot.com/) to query the json.
+​import groovy.json.JsonSlurper
 def object = new JsonSlurper().parseText(
 '''
 {
- address:{
-  street: ABC
+ "address":{
+  "street": "ABC"
  }
 }
 '''
@@ -67,7 +67,7 @@ def object = new JsonSlurper().parseText(
 def query = object
 println query
 
-object.address
+object.address.street
 --------------------------------------------------------------------------------------------
 Using Jayway's Json Path:
 Functions like min(), max() not working. Need to check this and practice json path writing later.
@@ -246,8 +246,14 @@ String:
 containsString()
 emptyString()
 
-Pending:
 DefaultReqAndRespSpec.java
+
+Ways to send payload: refers AutomatePost.java
+String varible
+JSON Object (Not taught in this course)
+Using Json file
+Using Hash Map
+Using POJO's
 
 Postman Echo:
 Postman Echo is service you can use to test your REST clients and make sample API calls. It provides endpoints for GET, POST, PUT, various auth mechanisms and other utility endpoints.
@@ -313,6 +319,7 @@ Login username and password are authentication.
 After login what modules user has access to is authorization.
 In API testing we generally use the term authorization instead of authentication. This is because API will provide user the authorization to access a 
 resource after authenticating the user.
+
 Type of Authentications:
 -Basic - Base 64 encoded username:password is sent in header called Authorization. When the HTTP request is sent to server, 
 it decodes the string and provides access. Base64 encoding is not secure as credentials are sent as clear text.
@@ -322,26 +329,37 @@ like Realm, Nonce etc. Client uses these parameters, encrypts username and pass 
 The token can be specified as a value of header called Authorization.
 -API Key -   Generated during first time login or signup. It is safe because we can delete and regenerate a new one. Passed as header.
 -Form - Contains a form with username and password and submit button.
+
 -OAuth - Used for authorization. Not for authentication (For this we use Open ID connect). OAuth solves the problem of delegated authorization.
 Open ID connect is a layer built on top of OAuth and provides identity services.
 OAuth terminologies: Resource owner, resource, client, resource server, Authorization server.
+Authorization server is responsible to issue access token to client app.
 Delegated authorization example: Allow stackoverflow to use Google credentials to login to stack overflow. Here the authorization is delegated
 to Google by Stack overflow.
 If an app/website is allowing user to login using Google/facebook account, it is using open ID connect for authentication
 If an app/website after login, allows user to redirect to Google/Facebook for some services, it is using OAuth for authorization. We can see
 OAuth in URL while redirecting. Ex: Allow a website to use your existing photos in Google pohotos to use for editing, framing etc.
+
 Authorization grant flow and implicit grant flow are 2 types of Oauth flows. Difference is in implicit grant flow where there is not Auth code
 sent from Authorization server back to client server. Only access token is sent. No refresh token also
 In Authorization grant flow, authorization server issues auth code, access token and refresh token to client app.
 Client credentials flow - Only services involved here. No users. Best fit for Microservices.
-Image for above flows - My Samsung phone.
+Image for above flows - src/main/resources/screenshots
 
----Gmail API Example----Authorization grant flow
-1. Enter credentials and scope and authorize. - Response- Auth code
-2. Supply auth code and get access token and refresh token.
-3. Renew token using refresh token.
-4. Get user profile by supplying access token
-5. Send email by encoding the content
+---Gmail API Example----Authorization grant flow - Used in web applications.
+1. Create Gmail account.
+2. Go to Google API console and set up dummy client app
+3. Enable Gmail API's for client app
+4. Create client credentials and user consent screen
+5. Authorize client app and fetch auth code
+6. Exchange auth code for access token and refresh token.
+7. Fetch user profile using Gmail API and access token.
+8. Refresh access token using refresh token.
+9. Send email using Gmail API and access token.
+
+In OAuth 2.0, the amount of access the user grants to the client application is determined by scope.
+In OAuth 2.0, the access token type is usually the Bearer token
+In OAuth 2.0 authorization code grant flow, in order to renew the access token, the value of grant_type is set to refresh_token
 
 Google OAuth documentation: developers.google.com/identity/protocols/oauth2
 In above page go to https://console.developers.google.com/ link for Google API Console and create a new project.
@@ -367,11 +385,13 @@ https://ostermiller.org/calc/encode.html
 ------------Gmail Example------Implicit grant flow--------
 https://developers.google.com/identity/protocols/oauth2/javascript-implicit-flow
 Step 2 in above URL
+Here the difference is in the initial auth request we use query parameter - response_type=token instead of code.
+After hitting the URL we get token directly in URL and can use it in further requests.
 ------------------------------------
 Open ID connect flow:
 Client authenticates using ID token which is issued by Auth server (Google)
 API for authentication using Open ID connect: https://accounts.google.com/o/oauth2/v2/auth
-The scope parameter for above API uses openid email which is the differentiation that this request is for authentication
+The scope query parameter for above API uses openid email which is the differentiation that this request is for authentication
 https://auth0.com/docs/secure/tokens/json-web-tokens
 JSON web token (JWT), pronounced "jot", is an open standard (RFC 7519) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object.
 Structure:
