@@ -33,17 +33,19 @@ public class HamcrestMethods {
 		        log().all().
 		        assertThat().
 		        statusCode(200).
-		        body("workspaces.name", contains("Test2","API Practice","Test1","Team Workspace"),//Passes if all elements present in same order and are the only elements in collection.
-		             "workspaces.name", hasItems("Test2","API Practice","Test1"),//Passes if elements specified exist. Extra elements in collection can exist and are ignored.
-		             "workspaces.name", containsInAnyOrder("Team Workspace","API Practice","Test1","Test2"),//Passes if all elements are present in collection are the only elements. Order is ignored.
+		        body("workspaces.name", contains("Team Workspace","Test20","API Practice", "Automated workspace", "Automated workspace1"),//Passes if all elements present in same order and are the only elements in collection.
+		             "workspaces.name", hasItems("non BDD workspace","API Practice"),//Passes if elements specified exist. Extra elements in collection can exist and are ignored.
+		             "workspaces.name", containsInAnyOrder("API Practice","Test20","non BDD workspace","Team Workspace"),//Passes if all elements are present in collection are the only elements. Order is ignored.
 		             "workspaces.name", not(empty()),//Checks if specified collection is empty or not. Remove "not" to check for empty.
 		             "workspaces.name", not(emptyArray()),//Checks if specified array(not collection) is empty.
 		             "workspaces.name", hasSize(4),//Validates the size of specified collection.
 		             "workspaces.name", not(everyItem(startsWith("T"))),//Verifies all items in collection start with a specified string. Remove "not"
 		             "workspaces[0]", hasKey("id"),//Checks key of a map
-		             "workspaces[0]", hasValue("465db5be-50dc-4e31-ad08-5094a1367e1e"),//Checks value of a map
-		             "workspaces[1]", hasEntry("id", "9336507d-859e-4846-80f8-b7d670d0c4f6"),//Checks both key and value of a map.
-		             "workspaces.name", not(equalTo(Collections.EMPTY_MAP))//Checks if map is empty.
+		             "workspaces[0]", hasValue("f971e759-4aaf-48ed-8f5c-5be09ea6d2ef"),//Checks value of a map
+		             "workspaces[1]", hasEntry("id", "4642c6a1-4c50-4105-931f-45ba67581bf2"),//Checks both key and value of a map.
+		             "workspaces.name", not(equalTo(Collections.EMPTY_MAP)),//Checks if map is empty.
+		             "workspaces[0].visibility", containsString("team"),
+		             "workspaces[0].visibility", not(emptyString())
 		             //Practice and study other matchers mentioned in Notes.txt
 		        		);
 	}

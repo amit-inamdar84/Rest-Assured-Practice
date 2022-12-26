@@ -3,7 +3,7 @@ package com.rest;
 import static io.restassured.RestAssured.given;
 
 import org.testng.annotations.Test;
-
+//Used to filter response
 public class PathParameter {
 	@Test
 	public void pathParameter(){

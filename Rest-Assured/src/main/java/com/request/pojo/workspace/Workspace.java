@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 //@JsonIgnoreProperties - Have option to select either serialization or deserialization. Class level Format is as below: 
 //@JsonIgnoreProperties(value={"id"}, allowSetters=true) or @JsonIgnoreProperties(value="id", allowGetters=true) 
 //where id is private class variable that we want to ignore. Multiple variables can be set here.
-//For deserialization, set allowSetters=true; for serialization set allowGetters=true.
+//For serialization, set allowSetters=true; for deserialization set allowGetters=true.
 
 @JsonInclude(Include.NON_NULL)//This Jackson annotation will help exclude null values in request body. String id in this case.
 //We can set it at the class level or variable level.

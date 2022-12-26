@@ -1,12 +1,15 @@
-Request method:	GET
-Request URI:	https://postman-echo.com/get
-Proxy:			<none>
-Request params:	<none>
-Query params:	<none>
-Form params:	<none>
-Path params:	<none>
-Headers:		Accept=*/*
-Cookies:		<none>
-Multiparts:		<none>
-Body:			<none>
-HTTP/1.1 200 OK
+{
+    "args": {
+        
+    },
+    "headers": {
+        "x-forwarded-proto": "https",
+        "x-forwarded-port": "443",
+        "host": "postman-echo.com",
+        "x-amzn-trace-id": "Root=1-638f85dc-0a8f33651e16e65509079eb7",
+        "accept": "*/*",
+        "user-agent": "Apache-HttpClient/4.5.13 (Java/17.0.3)",
+        "accept-encoding": "gzip,deflate"
+    },
+    "url": "https://postman-echo.com/get"
+}
