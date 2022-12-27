@@ -35,7 +35,7 @@ public class ComplexPojo4 {
 		EnvironmentRoot environmentRoot = new EnvironmentRoot(environment);
 		given().
 		        baseUri("https://api.getpostman.com").
-		        header("X-API-Key","PMAK-6163dd9a886923005f2aad79-cdd431c2dbd9109d3e5c010d48a558567c").
+		        header("X-API-Key","APIKEY").
 		        header("Content-Type","application/json").
 		        body(environmentRoot).
 		        log().all().

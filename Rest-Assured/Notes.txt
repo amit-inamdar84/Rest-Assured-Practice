@@ -408,12 +408,13 @@ Cannot automate authorization to get auth code. Because we need to use browser t
 Will start with automating get user profile and then sending email.
 ----------------------------------------------------------------------------------------
 Session based authentication:
+Oauth uses token based auth. Here no browser or user session is maintained. Works only if token is not expired.
 Session maintained by server.
 Session based authentication can work only for a single domain while the token based authentication can work across multiple domains
+A web app can be designed to use both session based and token based auth.
 Refer image in screenshots folder
 Diff between session based auth and token based auth: Refer video 166
 ---------------------------------------------------------------------------------------
-Form based auth:FormAuthentication.java
 -----------------------------------------------------------
 CSRF token: FormAuthentication.java
 ------------------------------------------------------------
@@ -422,9 +423,10 @@ mvnw.cmd clean install
 Path: D:\Demo App\RomanianCoderExamples-master\SpringBootSecurity\Forms\target
 Command: java -jar springboot-security-forms-0.0.1-SNAPSHOT.jar
 After setup, we will use Rest assured to automate login and fetch session id and use the same for subsequent requests.
- 
+Form based auth: FormAuthentication.java 
 ---------------------------------------------------------------
-Cookies:
+Cookies: Also called HTTP cookie, browser cookie or internet cookie.
+Cookie is a small piece of data stored in browser storage.
 SendCookies.java
 Video - 175
 Refer screenshot
