@@ -29,7 +29,7 @@ public class FormAuthentication {
                 filter(sfilter).
                 log().all().
         when().
-                get("/login").
+                get("/login").//Login page request
         then().
                 log().all().
                 assertThat().
@@ -40,7 +40,7 @@ public class FormAuthentication {
 		        sessionId(sfilter.getSessionId()).//Here we can send only cookie value
 		        log().all().
 		when().
-		       get("/profile/index").
+		       get("/profile/index").//Fetching session ID and getting profile page
 		then().
 		       log().all().
 		       assertThat().
